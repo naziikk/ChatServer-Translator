@@ -1,0 +1,37 @@
+/Applications/CLion.app/Contents/bin/cmake/mac/aarch64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -G Ninja -S /Users/nazarzakrevskij/CLionProjects/chatServer -B /Users/nazarzakrevskij/CLionProjects/chatServer/cmake-build-debug
+-- The C compiler identification is unknown
+-- The CXX compiler identification is unknown
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - failed
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc - broken
+CMake Error at /Applications/CLion.app/Contents/bin/cmake/mac/aarch64/share/cmake-3.27/Modules/CMakeTestCCompiler.cmake:67 (message):
+  The C compiler
+
+    "/usr/bin/cc"
+
+  is not able to compile a simple test program.
+
+  It fails with the following output:
+
+    Change Dir: '/Users/nazarzakrevskij/CLionProjects/chatServer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-mmjfPJ'
+    
+    Run Build Command(s): /Applications/CLion.app/Contents/bin/ninja/mac/aarch64/ninja -v cmTC_3db91
+    [1/2] /usr/bin/cc   -arch arm64 -o CMakeFiles/cmTC_3db91.dir/testCCompiler.c.o -c /Users/nazarzakrevskij/CLionProjects/chatServer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-mmjfPJ/testCCompiler.c
+    FAILED: CMakeFiles/cmTC_3db91.dir/testCCompiler.c.o 
+    /usr/bin/cc   -arch arm64 -o CMakeFiles/cmTC_3db91.dir/testCCompiler.c.o -c /Users/nazarzakrevskij/CLionProjects/chatServer/cmake-build-debug/CMakeFiles/CMakeScratch/TryCompile-mmjfPJ/testCCompiler.c
+    xcode-select: note: No developer tools were found, requesting install.
+    If developer tools are located at a non-default location on disk, use `sudo xcode-select --switch path/to/Xcode.app` to specify the Xcode that you wish to use for command line developer tools, and cancel the installation dialog.
+    See `man xcode-select` for more details.
+    ninja: build stopped: subcommand failed.
+    
+    
+
+  
+
+  CMake will not be able to correctly generate this project.
+Call Stack (most recent call first):
+  CMakeLists.txt:2 (project)
+
+
+-- Configuring incomplete, errors occurred!
