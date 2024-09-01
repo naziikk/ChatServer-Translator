@@ -7,7 +7,26 @@
 #include "translate.h"
 
 const int port = 8080;
-const std::string api_key = "AQVNzkMGuyjmtNNUG4tx_7HH7Vs8ra3G8tZSiBOt";
+std::string getAuthToken(const std::string& filename) {
+    std::ifstream file(filename);
+    std::string line;
+    std::string token;
+    if (file.is_open()) {
+        while (getline(file, line)) {
+            if (line.find("AUTH_TOKEN") != std::string::npos) {
+                size_t pos = line.find('=');
+                if (pos != std::string::npos) {
+                    token = line.substr(pos + 1);
+                    break;
+                }
+            }
+        }
+        file.close();
+    } else {
+        std::cerr << "Unable to open the configuration file." << std::endl;
+    }
+    return token;
+}
 
 int main() {
     Translate translate;
@@ -17,7 +36,7 @@ int main() {
     int opt = 1;
     int addrlen = sizeof(address);
     char buffer[1024] = {0};
-
+    std::string api_key = getAuthToken("config.ini");
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) { // socket creating
         perror("socket failed");
         exit(EXIT_FAILURE);

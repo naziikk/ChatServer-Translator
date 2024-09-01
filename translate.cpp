@@ -1,7 +1,5 @@
 #include "translate.h"
 #include <curl/curl.h>
-// indef - ajee8c3bma76mj9l86sb
-// key - AQVNzkMGuyjmtNNUG4tx_7HH7Vs8ra3G8tZSiBOt
 Translate::Translate() {}
 
 size_t write_callback(void* contents, size_t size, size_t nmemb, void* userp) {
@@ -10,7 +8,6 @@ size_t write_callback(void* contents, size_t size, size_t nmemb, void* userp) {
     response->append(static_cast<char*>(contents), totalSize);
     return totalSize;
 }
-
 std::string Translate::HttpRequestYandexApi(const std::string& text, const std::string& language, const std::string& api_key) {
     // https://curl.se/libcurl/c/curl_easy_init.html - используя это
     CURL* curl = curl_easy_init();
