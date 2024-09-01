@@ -5,59 +5,63 @@
 #include <unistd.h>
 #include <string>
 
-#define PORT 8080
+#define PORT 8080 // Порт, который будет использоваться для соединения с сервером
 
 int main() {
-    int sock = 0;
-    struct sockaddr_in serv_addr;
-    char buffer[1024] = {0};
+    int sock = 0; // Дескриптор сокета
+    struct sockaddr_in serv_addr; // Структура для хранения адреса сервера
+    char buffer[1024] = {0}; // Буфер для приема данных от сервера
 
-    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-        std::cout << "Socket creation error" << std::endl;
+    // Создание сокета
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) { // SOCK_STREAM используется для TCP соединения
+        std::cout << "Socket creation error" << '\n'; // Ошибка при создании сокета
         return -1;
     }
 
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(PORT);
+    serv_addr.sin_family = AF_INET; // Указываем, что используем IPv4
+    serv_addr.sin_port = htons(PORT); // Устанавливаем порт для подключения к серверу
 
+    // Преобразуем IP-адрес из строки в бинарный формат
     if (inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr) <= 0) {
-        std::cout << "Invalid address/ Address not supported" << std::endl;
+        std::cout << "Invalid address/ Address not supported" << std::endl; // Ошибка при преобразовании IP-адреса
         return -1;
     }
 
+    // Устанавливаем соединение с сервером
     if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
-        std::cout << "Connection Failed" << std::endl;
+        std::cout << "Connection Failed" << std::endl; // Ошибка при попытке подключения к серверу
         return -1;
     }
 
-    std::string message;
+    std::string message; // Сообщение, которое будем отправлять на сервер
     while (true) {
         std::cout << "Enter message to send to server (or 'exit' to quit): ";
-        std::getline(std::cin, message);
+        std::getline(std::cin, message); // Ввод сообщения от пользователя
 
+        // Отправляем сообщение на сервер
         send(sock, message.c_str(), message.size(), 0);
 
+        // Если сообщение "exit", завершаем соединение
         if (message == "exit") {
             std::cout << "Connection closed by client." << std::endl;
             break;
         }
 
         // Получаем запрос от сервера на выбор языка перевода
-        int valread = read(sock, buffer, 1024);
-        buffer[valread] = '\0';  // Завершаем строку
+        int valread = read(sock, buffer, 1024); // Читаем ответ от сервера
+        buffer[valread] = '\0'; // Завершаем строку
         std::cout << "Server: " << buffer;
 
-        // Вводим язык перевода
         std::string language;
-        std::getline(std::cin, language);
-        send(sock, language.c_str(), language.size(), 0);
+        std::getline(std::cin, language); // Ввод языка от пользователя
+        send(sock, language.c_str(), language.size(), 0); // Отправляем выбранный язык на сервер
 
         // Получаем переведенное сообщение от сервера
-        valread = read(sock, buffer, 1024);
-        buffer[valread] = '\0';  // Завершаем строку
+        valread = read(sock, buffer, 1024); // Читаем переведенное сообщение от сервера
+        buffer[valread] = '\0'; // Завершаем строку
         std::cout << "Translated message from server: " << buffer << std::endl;
     }
 
-    close(sock);
+    close(sock); // Закрываем сокет
     return 0;
 }

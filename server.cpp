@@ -7,6 +7,7 @@
 #include "translate.h"
 
 const int port = 8080;
+const std::string api_key = "AQVNzkMGuyjmtNNUG4tx_7HH7Vs8ra3G8tZSiBOt";
 
 int main() {
     Translate translate;
@@ -60,7 +61,8 @@ int main() {
             break;
         }
 
-        std::string s = "Enter language: ";
+        std::string s = "Enter language: \n";
+
         send(new_socket, s.c_str(), s.size(), 0);
 
         valread = read(new_socket, buffer, 1024);
@@ -68,7 +70,7 @@ int main() {
         language = std::string(buffer);
         std::cout << "Target language chosen by client: " << language << '\n';
 
-        std::string translated_text = translate.HttpRequestGoogleApi(text, language);
+        std::string translated_text = translate.HttpRequestYandexApi(text, language, api_key);
         send(new_socket, translated_text.c_str(), translated_text.size(), 0); // sending translated text
         std::cout << "Translated message sent to client.\n";
     }
