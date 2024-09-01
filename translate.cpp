@@ -1,5 +1,7 @@
 #include "translate.h"
 #include <curl/curl.h>
+#include "nlohmann/json.hpp"
+using json = nlohmann::json;
 Translate::Translate() {}
 
 size_t write_callback(void* contents, size_t size, size_t nmemb, void* userp) {
@@ -28,16 +30,28 @@ std::string Translate::HttpRequestYandexApi(const std::string& text, const std::
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json_data.c_str()); // post request
 
         // https://curl.se/libcurl/c/CURLOPT_WRITEFUNCTION.html - используя это
-//        size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdata);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_callback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
         res = curl_easy_perform(curl);
         if (res != CURLE_OK) {
             std::cerr << "cURL error: " << curl_easy_strerror(res) << '\n';
         }
-        // https://curl.se/libcurl/c/curl_easy_cleanup.html - используя это
+        // https://curl.se/libcurl/c/curl_easy_cleanup.html - используя этo
         curl_slist_free_all(headers);
         curl_easy_cleanup(curl);
+
+        try {
+            json parser = json::parse(response);
+            if (parser.contains("translations") && !parser["translations"].empty()) {
+                response = parser["translations"][0]["text"];
+            } else {
+                std::cerr << "Error: incorrect format JSON response\n";
+                response = "";
+            }
+        }
+        catch (const json::parse_error& e) {
+            std::cerr << "Error parsing JSON: " << e.what() << '\n';
+        }
     }
     return response;
 }
