@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cstring>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
@@ -23,13 +22,13 @@ int main() {
 
     // Преобразуем IP-адрес из строки в бинарный формат
     if (inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr) <= 0) {
-        std::cout << "Invalid address/ Address not supported" << std::endl; // Ошибка при преобразовании IP-адреса
+        std::cout << "Invalid address/ Address not supported" << '\n'; // Ошибка при преобразовании IP-адреса
         return -1;
     }
 
     // Устанавливаем соединение с сервером
     if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
-        std::cout << "Connection Failed" << std::endl; // Ошибка при попытке подключения к серверу
+        std::cout << "Connection Failed" << '\n'; // Ошибка при попытке подключения к серверу
         return -1;
     }
 
@@ -43,7 +42,7 @@ int main() {
 
         // Если сообщение "exit", завершаем соединение
         if (message == "exit") {
-            std::cout << "Connection closed by client." << std::endl;
+            std::cout << "Connection closed by client." << '\n';
             break;
         }
 
@@ -59,7 +58,7 @@ int main() {
         // Получаем переведенное сообщение от сервера
         valread = read(sock, buffer, 1024); // Читаем переведенное сообщение от сервера
         buffer[valread] = '\0'; // Завершаем строку
-        std::cout << "Translated message from server: " << buffer << std::endl;
+        std::cout << "Translated message from server: " << buffer << '\n';
     }
 
     close(sock); // Закрываем сокет
